@@ -58,6 +58,12 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "org.jetbrains.anko:anko:$anko_version"
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.google.android.gms:play-services-auth:19.2.0'
+    // implementation "androidx.camera:camera-core:1.1.0"
+// implementation "androidx.camera:camera-camera2:1.1.0"
+
+    implementation 'com.dropbox.core:dropbox-core-sdk:3.1.2'
+
 
 //    implementation 'com.github.felHR85:UsbSerial:6.1.0'
     implementation 'com.google.code.gson:gson:2.8.8'

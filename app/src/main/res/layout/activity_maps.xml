@@ -45,6 +45,16 @@
         app:layout_anchor="@id/map"
         app:layout_anchorGravity="bottom|end" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/camera_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/arduino_button"
+        android:layout_margin="16dp"
+        app:srcCompat="@drawable/camera"
+        app:layout_anchor="@id/map"
+        app:layout_anchorGravity="bottom|end" />
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

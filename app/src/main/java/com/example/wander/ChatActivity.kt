@@ -12,25 +12,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.wander.R
-import com.google.android.gms.common.api.ApiException
 import com.google.gson.annotations.SerializedName
-//import kotlinx.coroutines.Dispatchers
-//import kotlinx.coroutines.GlobalScope
-//import kotlinx.coroutines.launch
-//import kotlinx.coroutines.withContext
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import okhttp3.*
 import retrofit2.Callback
-import java.io.IOException
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.Header
-import retrofit2.http.Headers
 import retrofit2.http.POST
 import java.io.File
 import java.util.*
@@ -192,11 +182,6 @@ class ChatActivity : AppCompatActivity() {
     }
 
     fun getCompletions(completionRequest: CompletionRequest, apiKey: String, openAIInterface : OpenAIInterface, callback: (String?, Throwable?) -> Unit) {
-//        val openAIInterface = Retrofit.Builder()
-//            .baseUrl(BASE_URL)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//            .create(OpenAIInterface::class.java)
 
         openAIInterface.getCompletions(apiKey, completionRequest).enqueue(object: Callback<CompletionResponse> {
             override fun onResponse(call: Call<CompletionResponse>, response: Response<CompletionResponse>) {

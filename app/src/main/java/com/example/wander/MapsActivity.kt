@@ -21,8 +21,10 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.location.Location
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -31,9 +33,12 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.dropbox.core.DbxRequestConfig
+import com.dropbox.core.v2.DbxClientV2
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -43,7 +48,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.File
 import java.util.*
+import java.text.SimpleDateFormat
+
 
 
 //This class allows you to interact with the map by adding markers, styling its appearance and
@@ -74,6 +84,11 @@ data class VictimData(
 )
 data class Message(val sender: String, val body: String, val timestamp: Long)
 
+//interface DropboxApi {
+//    @POST("/upload")
+//    fun uploadImage(@Body image: RequestBody): Call<>
+//}
+
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var map: GoogleMap
@@ -82,6 +97,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var lastKnownLocation: Location? = null
     val victims = mutableListOf<VictimData>()
+    private val REQUEST_IMAGE_CAPTURE = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,6 +143,49 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         addButton()
         addChatButton()
         addArduinoButton()
+        addCameraButton()
+    }
+
+    private fun dispatchTakePictureIntent() {
+        println("fuck")
+
+        if(ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
+            println("fuckity")
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE)
+        }
+
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap
+            println("fuck fuck")
+            uploadImageToDropbox(imageBitmap)
+        }
+    }
+
+    private fun uploadImageToDropbox(imageBitmap: Bitmap) {
+        Thread(Runnable {
+            val dbxClientV2 = DbxClientV2(DbxRequestConfig.newBuilder("dropbox/java-tutorial").build(), "sl.BZHEtbzjBFLGtHksZMHotjP8tCAZ5dlEksjuqGjrmDogAM2iU6s0Ne5tDVA3B1DEmjlU70fBxbT7AutoX_1e1JZKel8jbgsMVMH1NdRGUkfyN8sEStNkXc6_s_u2K7YRCudcwFIiLnon")
+            val outputStream = ByteArrayOutputStream()
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            val inputStream = ByteArrayInputStream(outputStream.toByteArray())
+            val uploadBuilder = dbxClientV2.files().uploadBuilder("/" + SimpleDateFormat("dd-M-yyyy hh:mm:ss").format(Date()) +".jpg")
+            uploadBuilder.uploadAndFinish(inputStream)
+        }).start()
+    }
+
+    private fun addCameraButton(){
+        val addCameraButton = findViewById<FloatingActionButton>(R.id.camera_button)
+        addCameraButton.setOnClickListener(View.OnClickListener { //Start your second activity
+            dispatchTakePictureIntent()
+        })
+
     }
 
     private fun addArduinoButton(){
@@ -136,6 +195,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             startActivity(intent)
         })
     }
+
 
     private fun addChatButton() {
         val addChatButton = findViewById<FloatingActionButton>(R.id.chat_button)
@@ -374,19 +434,4 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    // Callback for the result from requesting permissions.
-    // This method is invoked for every call on requestPermissions(android.app.Activity, String[],
-    // int).
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<String>,
-//        grantResults: IntArray) {
-//        // Check if location permissions are granted and if so enable the
-//        // location data layer.
-//        if (requestCode == REQUEST_LOCATION_PERMISSION) {
-//            if (grantResults.contains(PackageManager.PERMISSION_GRANTED)) {
-//                enableMyLocation()
-//            }
-//        }
-//    }
 }

@@ -12,9 +12,7 @@ import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.app.ActivityCompat
-import kotlinx.android.synthetic.main.*
 import kotlinx.android.synthetic.main.activity_arduino_main.*
-import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
 
 
