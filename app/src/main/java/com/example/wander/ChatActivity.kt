@@ -23,6 +23,7 @@ import retrofit2.http.Body
 import retrofit2.http.Header
 import retrofit2.http.POST
 import java.io.File
+import java.io.FileInputStream
 import java.util.*
 
 data class ChatMessage(val sender: String, val messageText: String)
@@ -108,13 +109,9 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+        getSupportActionBar()!!.setTitle("ShakeSafe");
 
-        val localProperties = Properties()
-        val localPropertiesFile = File("local.properties")
-        if (localPropertiesFile.exists()) {
-            localProperties.load(localPropertiesFile.inputStream())
-        }
-        val apiKey = "Bearer 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"
+        val apiKey = "Bearer " + resources.getString(R.string.OPEN_AI_API_KEY)
 
         messageRecyclerView = findViewById(R.id.recycler_view)
         messageEditText = findViewById(R.id.message_edit_text)
@@ -159,10 +156,8 @@ class ChatActivity : AppCompatActivity() {
                         // Handle the error
                         return@getCompletions
                     }
-                    println("got ")
 
                     if (result != null) {
-                        println(result)
                         val message = ChatMessage("Helper", result.trim())
                         messages.add(message)
                         adapter.notifyItemInserted(messages.size - 1)
@@ -186,7 +181,6 @@ class ChatActivity : AppCompatActivity() {
         openAIInterface.getCompletions(apiKey, completionRequest).enqueue(object: Callback<CompletionResponse> {
             override fun onResponse(call: Call<CompletionResponse>, response: Response<CompletionResponse>) {
                 if (response.isSuccessful) {
-                    println("eeeeee")
                     val completionResponse = response.body()
                     if (completionResponse != null) {
                         val choices = completionResponse.choices
@@ -214,7 +208,6 @@ class ChatActivity : AppCompatActivity() {
             }
 
             override fun onFailure(call: Call<CompletionResponse>, t: Throwable) {
-                println("error bitch")
                 callback(null, t)
             }
         })

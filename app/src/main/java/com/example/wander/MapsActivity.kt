@@ -82,10 +82,6 @@ data class VictimData(
 )
 data class Message(val sender: String, val body: String, val timestamp: Long)
 
-//interface DropboxApi {
-//    @POST("/upload")
-//    fun uploadImage(@Body image: RequestBody): Call<>
-//}
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -105,6 +101,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        getSupportActionBar()!!.setTitle("ShakeSafe");
     }
 
     /**
@@ -145,12 +142,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun dispatchTakePictureIntent() {
-        println("fuck")
 
         if(ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED){
-            println("fuckity")
             val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE)
         }
@@ -162,14 +157,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             val imageBitmap = data?.extras?.get("data") as Bitmap
-            println("fuck fuck")
             uploadImageToDropbox(imageBitmap)
         }
     }
 
     private fun uploadImageToDropbox(imageBitmap: Bitmap) {
         Thread(Runnable {
-            val dbxClientV2 = DbxClientV2(DbxRequestConfig.newBuilder("dropbox/java-tutorial").build(), "sl.BZHEtbzjBFLGtHksZMHotjP8tCAZ5dlEksjuqGjrmDogAM2iU6s0Ne5tDVA3B1DEmjlU70fBxbT7AutoX_1e1JZKel8jbgsMVMH1NdRGUkfyN8sEStNkXc6_s_u2K7YRCudcwFIiLnon")
+            val dbxClientV2 = DbxClientV2(DbxRequestConfig.newBuilder("dropbox/java-tutorial").build(), resources.getString(R.string.DROPBOX_API_KEY))
             val outputStream = ByteArrayOutputStream()
             imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             val inputStream = ByteArrayInputStream(outputStream.toByteArray())
@@ -203,9 +197,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         })
     }
 
-    private fun showChatView() {
-        println("lol")
-    }
 
     private fun addButton() {
         val addButton = findViewById<FloatingActionButton>(R.id.add_location_button)
@@ -258,7 +249,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
             } catch (e: SecurityException) {
-                println("oooooo")
                 Log.e("Exception: %s", e.message, e)
             }
             bottomSheet.dismiss()
@@ -277,7 +267,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             )
         } else {
 //            showUserLocationOnMap()
-            println("ayee")
         }
     }
 
@@ -286,14 +275,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 //                showUserLocationOnMap()
-                println("woah")
             }
         }
     }
 
     private fun showUserLocationOnMap() {
         // Get the user's location
-        println("over here bitch")
         try {
             fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                 if (location != null) {
@@ -308,7 +295,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
         } catch (e: SecurityException) {
-            println("oooooo")
             Log.e("Exception: %s", e.message, e)
         }
 

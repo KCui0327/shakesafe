@@ -29,6 +29,7 @@ class ArduinoMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_arduino_main)
+        getSupportActionBar()!!.setTitle("ShakeSafe");
 
         m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if(m_bluetoothAdapter == null){

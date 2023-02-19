@@ -20,6 +20,10 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+def localProperties = new Properties()
+
+localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     compileSdkVersion 31
     defaultConfig {
@@ -32,7 +36,17 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
+        debug {
+            buildConfigField("String", "OPEN_AI_API_KEY", "\"" + localProperties['OPEN_AI_KEY'] + "\"")
+            buildConfigField("String", "DROPBOX_API_KEY", "\"" + localProperties['DROPBOX_API_KEY'] + "\"")
+            buildConfigField("String", "GOOGLE_MAP_API_KEY", "\"" + localProperties['MAP_API_KEY'] + "\"")
+            resValue("string", "GOOGLE_MAP_API_KEY", localProperties['MAP_API_KEY'])
+            resValue("string", "OPEN_AI_API_KEY", localProperties['OPEN_AI_KEY'])
+            resValue("string", "DROPBOX_API_KEY", localProperties['DROPBOX_API_KEY'])
+
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -59,16 +73,7 @@ dependencies {
     implementation "org.jetbrains.anko:anko:$anko_version"
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
-    // implementation "androidx.camera:camera-core:1.1.0"
-// implementation "androidx.camera:camera-camera2:1.1.0"
-// Make sure to add the following dependencies to your app build.gradle file:
-// implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
-// implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0"
-
     implementation 'com.dropbox.core:dropbox-core-sdk:3.1.2'
-
-
-//    implementation 'com.github.felHR85:UsbSerial:6.1.0'
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
