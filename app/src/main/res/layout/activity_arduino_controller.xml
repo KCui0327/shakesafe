@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#3FBDEB"
+    android:padding="10dp">
+
+    <Button
+        android:id="@+id/control_A"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:backgroundTint="@color/black"
+        android:layout_centerHorizontal="true"
+        android:text="A"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/control_B"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/control_A"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/black"
+        android:text="B"
+        android:textSize="25sp"
+        />
+
+    <Button
+        android:id="@+id/control_C"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/control_B"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/black"
+        android:text="C"
+        android:textSize="25sp"
+        />
+
+    <Button
+        android:id="@+id/control_D"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/control_C"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/black"
+        android:text="D"
+        android:textSize="25sp"
+        />
+
+    <Button
+        android:id="@+id/control_E"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/control_D"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/black"
+        android:text="D"
+        android:textSize="25sp"
+        />
+
+    <Button
+        android:id="@+id/control_F"
+        android:layout_width="150dp"
+        android:layout_height="70dp"
+        android:layout_below="@+id/control_E"
+        android:layout_centerHorizontal="true"
+        android:backgroundTint="@color/black"
+        android:text="D"
+        android:textSize="25sp"
+        />
+
+
+    <Button
+
+        android:id="@+id/control_led_disconnect"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_below="@+id/control_F"
+        android:layout_centerHorizontal="true"
+        android:text="DISCONNECT"
+        android:backgroundTint="@color/black"
+        android:textSize="25sp" />
+
+</RelativeLayout>

@@ -131,12 +131,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun addChatButton() {
         val addChatButton = findViewById<FloatingActionButton>(R.id.chat_button)
         addChatButton.setOnClickListener(View.OnClickListener { //Start your second activity
-//            val intent = Intent(this@MapsActivity, ChatActivity::class.java)
-//            println("fkhsjdkhjdfskhjfds")
             val intent = Intent(this, ChatActivity::class.java)
             startActivity(intent)
-//            showLocationForm()
-//            startActivity(intent)
         })
     }
 
