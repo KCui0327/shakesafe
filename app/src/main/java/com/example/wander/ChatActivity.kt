@@ -1,0 +1,211 @@
+package com.example.wander
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.wander.R
+import com.google.android.gms.common.api.ApiException
+import com.google.gson.annotations.SerializedName
+//import kotlinx.coroutines.Dispatchers
+//import kotlinx.coroutines.GlobalScope
+//import kotlinx.coroutines.launch
+//import kotlinx.coroutines.withContext
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
+import retrofit2.http.Header
+import retrofit2.http.Headers
+import retrofit2.http.POST
+import java.io.File
+import java.util.*
+
+data class ChatMessage(val sender: String, val messageText: String)
+
+class MessageAdapter(private val messages: List<ChatMessage>) :
+    RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_message, parent, false)
+        return MessageViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
+        val message = messages[position]
+        holder.messageTextView.text = message.messageText
+        holder.messageSender.text = message.sender
+    }
+
+
+    override fun getItemCount(): Int {
+        return messages.size
+    }
+
+    class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val messageTextView: TextView = itemView.findViewById(R.id.messageText)
+        val messageSender: TextView = itemView.findViewById(R.id.messageSender)
+    }
+}
+
+// Define the request object
+data class CompletionRequest(
+    val prompt: String,
+    val maxTokens: Int,
+    val temperature: Double = 0.5,
+    val topP: Double = 1.0,
+    val frequencyPenalty: Double = 0.0,
+    val presencePenalty: Double = 0.0,
+    val stop: List<String>? = null,
+    val models: List<String>? = null
+)
+
+// Define the response object
+data class CompletionResponse(
+    val id: String,
+    @SerializedName("object")
+    val objectType: String,
+    val created: Long,
+    val model: String,
+    val choices: List<CompletionChoice>
+)
+
+data class CompletionChoice(
+    val text: String,
+    val index: Int,
+    val logprobs: Map<String, Double>,
+    val finishReason: String?
+)
+
+
+interface OpenAIInterface {
+    @POST("completions")
+    fun getCompletions(
+        @Header("Authorization") apiKey: String,
+        @Body completionRequest: CompletionRequest
+    ): Response<CompletionResponse>
+}
+
+const val BASE_URL = "https://api.openai.com/v1/completions"
+
+const val CHAT_BOT_PREFIX = "Please act as a AI replier to someone trapped under a wreckage, tell them help is on the way. Human: "
+
+class ChatActivity : AppCompatActivity() {
+
+    private lateinit var messageRecyclerView: RecyclerView
+    private lateinit var messageEditText: EditText
+    private lateinit var sendButton: Button
+
+    private val messages = mutableListOf<ChatMessage>()
+    private val adapter = MessageAdapter(messages)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_chat)
+
+        val localProperties = Properties()
+        val localPropertiesFile = File("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+        }
+        val apiKey = localProperties.getProperty("api_key")
+
+        val openAIInterface = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(OpenAIInterface::class.java)
+
+
+        messageRecyclerView = findViewById(R.id.recycler_view)
+        messageEditText = findViewById(R.id.message_edit_text)
+        sendButton = findViewById(R.id.send_button)
+
+        messageRecyclerView.adapter = adapter
+        messageRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        sendButton.setOnClickListener {
+            val messageString = messageEditText.text.toString()
+            val message = ChatMessage("User", messageString)
+            if (messageString.isNotEmpty()) {
+                messages.add(message)
+                adapter.notifyItemInserted(messages.size - 1)
+                messageRecyclerView.smoothScrollToPosition(messages.size - 1)
+                messageEditText.text.clear()
+
+
+//                GlobalScope.launch(Dispatchers.Main) {
+//                    val completionRequest = CompletionRequest(
+//                        prompt = CHAT_BOT_PREFIX + messageString,
+//                        temperature=0.9,
+//                        maxTokens=150,
+//                        topP=1.0,
+//                        frequencyPenalty=0.0,
+//                        presencePenalty=0.6,
+//                        stop=listOf(" Human:", " AI:")
+//                    );
+//
+//                    val response = withContext(Dispatchers.IO) {
+//                        openAIInterface.getCompletions(apiKey, completionRequest)
+//                    }
+//                    if (response.isSuccessful) {
+//                        val completionResponse = response.body()
+//                        if (completionResponse != null) {
+//                            val choices = completionResponse.choices
+//                            if (choices.isNotEmpty()) {
+//                                val message = ChatMessage("Helper", choices[0].text)
+//                                messages.add(message)
+//                                adapter.notifyItemInserted(messages.size - 1)
+//                                messageRecyclerView.smoothScrollToPosition(messages.size - 1)
+//                            }
+//                        }
+//                    } else {
+//                        val message = ChatMessage("Helper", "Please wait a moment while we try to assist your request..")
+//                        messages.add(message)
+//                        adapter.notifyItemInserted(messages.size - 1)
+//                        messageRecyclerView.smoothScrollToPosition(messages.size - 1)
+//
+//                    }
+//                }
+            }
+        }
+    }
+
+//    suspend fun getCompletions(completionRequest: CompletionRequest, apiKey: String, openAIInterface: OpenAIInterface): String {
+//        val response = withContext(Dispatchers.IO) {
+//            openAIInterface.getCompletions(apiKey, completionRequest)
+//        }
+//
+//        if (response.isSuccessful) {
+//            val completionResponse = response.body()
+//            if (completionResponse != null) {
+//                val choices = completionResponse.choices
+//                if (choices.isNotEmpty()) {
+//                    return choices[0].text
+//                }
+//            }
+//        } else {
+//            val errorBody = response.errorBody()?.string()
+//            val errorMessage = when (response.code()) {
+//                400 -> "Bad request: $errorBody"
+//                401 -> "Unauthorized: $errorBody"
+//                403 -> "Forbidden: $errorBody"
+//                404 -> "Not found: $errorBody"
+//                429 -> "Too many requests: $errorBody"
+//                500 -> "Internal server error: $errorBody"
+//                503 -> "Service unavailable: $errorBody"
+//                else -> "Unknown error: $errorBody"
+//            }
+//           throw Exception(errorMessage)
+//        }
+//
+//        throw Exception("No completions found")
+//    }
+
+}

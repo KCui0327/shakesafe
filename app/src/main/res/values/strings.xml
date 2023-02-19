@@ -21,5 +21,7 @@
     <string name="dropped_pin">Dropped Pin</string>
     <string name="poi">poi</string>
     <string name="zoom">15f</string>
+    <string name="type_a_message">Type a message</string>
+    <string name="send">Send</string>
 
 </resources>
