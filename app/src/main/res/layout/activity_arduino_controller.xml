@@ -7,21 +7,21 @@
 
     <Button
         android:id="@+id/control_A"
-        android:layout_width="150dp"
+        android:layout_width="250dp"
         android:layout_height="70dp"
         android:backgroundTint="@android:color/transparent"
         android:layout_centerHorizontal="true"
-        android:text="A"
+        android:text="Buzzer ON"
         android:textSize="25sp" />
 
     <Button
         android:id="@+id/control_B"
-        android:layout_width="150dp"
+        android:layout_width="250dp"
         android:layout_height="70dp"
         android:layout_below="@+id/control_A"
         android:layout_centerHorizontal="true"
         android:backgroundTint="@android:color/transparent"
-        android:text="B"
+        android:text="Buzzer OFF"
         android:textSize="25sp"
         />
 
@@ -54,7 +54,7 @@
         android:layout_below="@+id/control_D"
         android:layout_centerHorizontal="true"
         android:backgroundTint="@android:color/transparent"
-        android:text="D"
+        android:text="E"
         android:textSize="25sp"
         />
 
@@ -65,7 +65,7 @@
         android:layout_below="@+id/control_E"
         android:layout_centerHorizontal="true"
         android:backgroundTint="@android:color/transparent"
-        android:text="D"
+        android:text="F"
         android:textSize="25sp"
         />
 

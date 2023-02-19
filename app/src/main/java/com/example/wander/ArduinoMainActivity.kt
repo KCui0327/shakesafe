@@ -57,6 +57,10 @@ class ArduinoMainActivity : AppCompatActivity() {
         }
 
         select_device_refresh.setOnClickListener{ pairedDeviceList() }
+        close_arduino_main.setOnClickListener {
+            val intent = Intent(this, MapsActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 

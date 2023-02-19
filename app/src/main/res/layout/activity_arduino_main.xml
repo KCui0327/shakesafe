@@ -9,7 +9,6 @@
     tools:context=".ArduinoMainActivity">
 
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,12 +34,23 @@
         android:layout_marginTop="150dp" />
 
     <Button
+        android:id="@+id/close_arduino_main"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@android:color/transparent"
+        android:text="CLOSE" />
+
+    <Button
         android:id="@+id/select_device_refresh"
         android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="70dp"
         android:backgroundTint="@android:color/transparent"
         android:text="REFRESH" />
+
+
 
 </RelativeLayout>
