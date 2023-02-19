@@ -68,8 +68,6 @@
         android:text="F"
         android:textSize="25sp"
         />
-
-
     <Button
 
         android:id="@+id/control_led_disconnect"
@@ -81,4 +79,13 @@
         android:backgroundTint="@android:color/transparent"
         android:textSize="25sp" />
 
+    <TextView
+        android:id="@+id/temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/control_led_disconnect"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:text=""
+        android:textSize="25sp" />
 </RelativeLayout>

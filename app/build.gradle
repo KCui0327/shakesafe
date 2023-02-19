@@ -61,6 +61,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
     // implementation "androidx.camera:camera-core:1.1.0"
 // implementation "androidx.camera:camera-camera2:1.1.0"
+// Make sure to add the following dependencies to your app build.gradle file:
+// implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
+// implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0"
 
     implementation 'com.dropbox.core:dropbox-core-sdk:3.1.2'
 

@@ -10,19 +10,15 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_arduino_controller.*
-//import kotlinx.android.synthetic.main.control_layout.*
 import java.io.IOException
-import java.lang.ref.WeakReference
 import java.util.*
-
 
 class ArduinoControllerActivity: AppCompatActivity(){
 
@@ -34,11 +30,15 @@ class ArduinoControllerActivity: AppCompatActivity(){
         lateinit var m_bluetoothManager: BluetoothManager
         var m_isConnected: Boolean = false
         lateinit var m_address: String
+        private val mHandler = Handler(Looper.getMainLooper())
+        var myTextView: TextView? = null
     }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_arduino_controller)
+
         m_address = intent.getStringExtra(ArduinoMainActivity.EXTRA_ADDRESS).toString()
 
         ConnectToDevice(this).execute()
@@ -51,12 +51,14 @@ class ArduinoControllerActivity: AppCompatActivity(){
         control_F.setOnClickListener { sendCommand("6") }
         control_led_disconnect.setOnClickListener{ disconnect() }
 
+        myTextView = findViewById<TextView>(R.id.temp)
     }
 
     private fun sendCommand(input: String){
         if(m_bluetoothSocket != null){
             try{
                 m_bluetoothSocket!!.outputStream.write(input.toByteArray())
+
             }catch(e: IOException){
                 e.printStackTrace()
             }
@@ -92,13 +94,9 @@ class ArduinoControllerActivity: AppCompatActivity(){
         override fun doInBackground(vararg p0: Void?): String {
             try{
                 if(m_bluetoothSocket == null || !m_isConnected){
-//                    val context = WeakReference(mContext).get()
-//                    if (context == null) {
-//                        return "None"
-//                    }
+
 
                     m_bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-//                    m_bluetoothManager = BluetoothManager.getA
                     val device: BluetoothDevice = m_bluetoothAdapter.getRemoteDevice(m_address)
                     if (ActivityCompat.checkSelfPermission(
                             this.context,
@@ -116,11 +114,26 @@ class ArduinoControllerActivity: AppCompatActivity(){
                     }
                     println(m_myUUID)
                     m_bluetoothSocket = device.createRfcommSocketToServiceRecord(m_myUUID)
-                    println("hkhjdfhjdhjdhj")
                     BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
                     println(m_bluetoothSocket)
                     m_bluetoothSocket!!.connect()
-                    println("hkhjdfhjdhjdhj")
+                    m_isConnected = true;
+                    Thread(Runnable {
+                        while(m_isConnected){
+                            val inputStream = m_bluetoothSocket!!.inputStream
+
+                            val buffer = ByteArray(1024)
+                            val bytesRead = inputStream.read(buffer)
+                            val data = String(buffer, 0, bytesRead)
+
+                            println(data)
+
+                            mHandler.post {
+                                myTextView!!.text = data
+                            }
+                        }
+                    }).start()
+
                 }
             }catch (e: IOException){
                 connectSucess = false
