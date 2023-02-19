@@ -126,6 +126,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         showLocationsOnMap()
         addButton()
         addChatButton()
+        addArduinoButton()
+    }
+
+    private fun addArduinoButton(){
+        val addArduinotButton = findViewById<FloatingActionButton>(R.id.arduino_button)
+        addArduinotButton.setOnClickListener(View.OnClickListener { //Start your second activity
+            val intent = Intent(this, ArduinoMainActivity::class.java)
+            startActivity(intent)
+        })
     }
 
     private fun addChatButton() {

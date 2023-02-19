@@ -27,6 +27,7 @@ android {
         vectorDrawables.useSupportLibrary = true
         minSdkVersion 19
         targetSdkVersion 31
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -43,6 +44,8 @@ android {
     }
 }
 
+ext.anko_version='0.10.8'
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -54,7 +57,9 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.9.3'
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "org.jetbrains.anko:anko:$anko_version"
-    implementation 'com.github.felHR85:UsbSerial:6.1.0'
+    implementation 'com.android.support:multidex:1.0.3'
+
+//    implementation 'com.github.felHR85:UsbSerial:6.1.0'
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'

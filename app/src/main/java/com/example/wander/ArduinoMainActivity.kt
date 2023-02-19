@@ -1,15 +1,19 @@
 package com.example.wander
 
+import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.app.ActivityCompat
 import kotlinx.android.synthetic.main.*
+import kotlinx.android.synthetic.main.activity_arduino_main.*
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.toast
 
@@ -35,6 +39,20 @@ class ArduinoMainActivity : AppCompatActivity() {
         }
         if(!m_bluetoothAdapter!!.isEnabled){
             val enableBluetoothIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.BLUETOOTH_CONNECT
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return
+            }
             startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BLUETOOTH)
         }
 
@@ -43,6 +61,20 @@ class ArduinoMainActivity : AppCompatActivity() {
     }
 
     private fun pairedDeviceList(){
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.BLUETOOTH_CONNECT
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
         m_pairedDevices = m_bluetoothAdapter!!.bondedDevices
         val list:ArrayList<BluetoothDevice> = ArrayList()
 
@@ -60,7 +92,7 @@ class ArduinoMainActivity : AppCompatActivity() {
             val device: BluetoothDevice = list[position]
             val address: String = device.address
 
-            val intent = Intent(this, ControlActivity::class.java)
+            val intent = Intent(this, ArduinoControllerActivity::class.java)
             intent.putExtra(EXTRA_ADDRESS, address)
             startActivity(intent)
         }
