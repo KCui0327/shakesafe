@@ -1,6 +1,6 @@
 # ShakeSafe
 
-**Note: This Andriod App was made with Kotlin with OpenAI's GPT3 API, Google Maps API, and Dropbox API. The team began by using the "Wandering with Google Maps" boilerplate template. **.
+**Note: This Andriod App was made with Kotlin with OpenAI's GPT3 API, Google Maps API, and Dropbox API. The team began by using the "Wandering with Google Maps" boilerplate template. The project won the Health Category Prize in the 2023 MakeUoft competition.**.
 
 ## Introduction
 In response to recent tragic events in Turkey, where the rescue efforts for the Earthquake have been very difficult. We decided to use Qualcomm’s HDK 8450  hardware development kit to create an application for survivors of natural disasters like earthquakes to send out distress signals to local authorities.
