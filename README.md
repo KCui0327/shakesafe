@@ -7,3 +7,5 @@ In response to recent tragic events in Turkey, where the rescue efforts for the 
 
 ## What did we do?
 To develop the android app, we used a kotlin template from Android Studio. We used various APIs such as Google Maps for location tracking, openAI for the chatbot, and Dropbox to upload the photos that the users take. On the hardware side, we used an Arduino Due with a Bluetooth transmitter to talk to the android device. The Arduino sensors send relevant information like sound and temperature to the user interface
+
+[Link to Devpost](https://devpost.com/software/i-can-t-breathe#updates)https://devpost.com/software/i-can-t-breathe#updates
